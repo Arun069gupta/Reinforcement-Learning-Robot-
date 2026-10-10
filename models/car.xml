@@ -1,0 +1,285 @@
+<mujoco model="rl_car">
+
+    <!-- ====================================================== -->
+    <!-- COMPILER / OPTIONS -->
+    <!-- ====================================================== -->
+
+    <compiler
+        angle="degree"
+        coordinate="local"/>
+
+    <option
+        timestep="0.002"
+        gravity="0 0 -9.81"
+        integrator="RK4"/>
+
+
+    <!-- ====================================================== -->
+    <!-- VISUAL SETTINGS -->
+    <!-- ====================================================== -->
+
+    <visual>
+
+        <headlight
+            diffuse="0.8 0.8 0.8"
+            ambient="0.3 0.3 0.3"
+            specular="0.1 0.1 0.1"/>
+
+        <global
+            offwidth="1920"
+            offheight="1080"/>
+
+    </visual>
+
+
+    <!-- ====================================================== -->
+    <!-- MATERIALS -->
+    <!-- ====================================================== -->
+
+    <asset>
+
+        <material
+            name="ground_material"
+            rgba="0.15 0.15 0.15 1"/>
+
+        <material
+            name="wall_material"
+            rgba="0.8 0.1 0.1 1"/>
+
+        <material
+            name="car_material"
+            rgba="0.1 0.3 0.8 1"/>
+
+        <material
+            name="wheel_material"
+            rgba="0.05 0.05 0.05 1"/>
+
+    </asset>
+
+
+    <!-- ====================================================== -->
+    <!-- WORLD -->
+    <!-- ====================================================== -->
+
+    <worldbody>
+
+        <!-- ================================================== -->
+        <!-- GROUND -->
+        <!-- ================================================== -->
+
+        <geom
+            name="ground"
+            type="plane"
+            pos="0 0 0"
+            size="20 20 0.1"
+            material="ground_material"
+            friction="1.0 0.005 0.0001"/>
+
+
+        <!-- ================================================== -->
+        <!-- OUTER WALLS -->
+        <!-- ================================================== -->
+
+        <geom
+            name="outer_wall_top"
+            type="box"
+            pos="0 5.75 0.25"
+            size="8 0.15 0.25"
+            material="wall_material"
+            contype="1"
+            conaffinity="1"/>
+
+        <geom
+            name="outer_wall_bottom"
+            type="box"
+            pos="0 -5.75 0.25"
+            size="8 0.15 0.25"
+            material="wall_material"
+            contype="1"
+            conaffinity="1"/>
+
+        <geom
+            name="outer_wall_left"
+            type="box"
+            pos="-8 0 0.25"
+            size="0.15 5.75 0.25"
+            material="wall_material"
+            contype="1"
+            conaffinity="1"/>
+
+        <geom
+            name="outer_wall_right"
+            type="box"
+            pos="8 0 0.25"
+            size="0.15 5.75 0.25"
+            material="wall_material"
+            contype="1"
+            conaffinity="1"/>
+
+
+        <!-- ================================================== -->
+        <!-- INNER WALLS -->
+        <!-- ================================================== -->
+
+        <geom
+            name="inner_wall_top"
+            type="box"
+            pos="0 2.75 0.25"
+            size="5 0.15 0.25"
+            material="wall_material"
+            contype="1"
+            conaffinity="1"/>
+
+        <geom
+            name="inner_wall_bottom"
+            type="box"
+            pos="0 -2.75 0.25"
+            size="5 0.15 0.25"
+            material="wall_material"
+            contype="1"
+            conaffinity="1"/>
+
+        <geom
+            name="inner_wall_left"
+            type="box"
+            pos="-5 0 0.25"
+            size="0.15 2.75 0.25"
+            material="wall_material"
+            contype="1"
+            conaffinity="1"/>
+
+        <geom
+            name="inner_wall_right"
+            type="box"
+            pos="5 0 0.25"
+            size="0.15 2.75 0.25"
+            material="wall_material"
+            contype="1"
+            conaffinity="1"/>
+
+
+        <!-- ================================================== -->
+        <!-- CAR -->
+        <!-- ================================================== -->
+
+        <body
+            name="car"
+            pos="-4.5 -3.0 0.32">
+
+            <!-- Free floating vehicle -->
+            <freejoint/>
+
+
+            <!-- ============================================== -->
+            <!-- CHASSIS -->
+            <!-- ============================================== -->
+
+            <geom
+                name="chassis"
+                type="box"
+                pos="0 0 -0.08"
+                size="0.65 0.45 0.12"
+                mass="10"
+                material="car_material"
+                friction="1.0 0.005 0.0001"/>
+
+
+            <!-- ============================================== -->
+            <!-- LEFT REAR WHEEL -->
+            <!-- ============================================== -->
+
+            <body
+                name="rear_left_wheel"
+                pos="-0.45 0.48 -0.06">
+
+                <joint
+                    name="rear_left_joint"
+                    type="hinge"
+                    axis="0 1 0"/>
+
+                <!-- Increased radius: 0.18 -> 0.25 m -->
+                <geom
+                    name="rear_left_wheel_geom"
+                    type="cylinder"
+                    size="0.25 0.08"
+                    euler="90 0 0"
+                    mass="0.5"
+                    material="wheel_material"
+                    friction="1.2 0.005 0.0001"/>
+
+            </body>
+
+
+            <!-- ============================================== -->
+            <!-- RIGHT REAR WHEEL -->
+            <!-- ============================================== -->
+
+            <body
+                name="rear_right_wheel"
+                pos="-0.45 -0.48 -0.06">
+
+                <joint
+                    name="rear_right_joint"
+                    type="hinge"
+                    axis="0 1 0"/>
+
+                <!-- Increased radius: 0.18 -> 0.25 m -->
+                <geom
+                    name="rear_right_wheel_geom"
+                    type="cylinder"
+                    size="0.25 0.08"
+                    euler="90 0 0"
+                    mass="0.5"
+                    material="wheel_material"
+                    friction="1.2 0.005 0.0001"/>
+
+            </body>
+
+
+            <!-- ============================================== -->
+            <!-- FRONT CASTER -->
+            <!-- ============================================== -->
+
+            <body
+                name="front_caster"
+                pos="0.48 0 -0.14">
+
+                <geom
+                    name="front_caster_geom"
+                    type="sphere"
+                    size="0.16"
+                    mass="0.3"
+                    material="wheel_material"
+                    friction="1.0 0.005 0.0001"/>
+
+            </body>
+
+        </body>
+
+    </worldbody>
+
+
+    <!-- ====================================================== -->
+    <!-- ACTUATORS -->
+    <!-- IMPORTANT: MUST BE OUTSIDE <worldbody> -->
+    <!-- ====================================================== -->
+
+    <actuator>
+
+        <motor
+            name="left_motor"
+            joint="rear_left_joint"
+            gear="15"
+            ctrlrange="-1 1"
+            ctrllimited="true"/>
+
+        <motor
+            name="right_motor"
+            joint="rear_right_joint"
+            gear="15"
+            ctrlrange="-1 1"
+            ctrllimited="true"/>
+
+    </actuator>
+
+</mujoco>

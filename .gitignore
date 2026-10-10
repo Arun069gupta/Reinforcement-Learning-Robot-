@@ -1,0 +1,26 @@
+# Editor files
+.vscode/
+.idea/
+
+# Python cache and environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+
+# Generated output
+build/
+dist/
+logs/
+runs/
+tensorboard/
+*.db
+*.log
+*.mp4
+*.avi
+
+# Intermediate PPO checkpoints
+training/checkpoints/
